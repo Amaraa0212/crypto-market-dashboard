@@ -1,39 +1,72 @@
-# Crypto Market Dashboard
+# Crypto Dashboard
 
-Real-time cryptocurrency market dashboard built with **Next.js**, **Tailwind CSS**, and **Binance WebSocket API**.  
-Displays live market data, top gainers/losers, and interactive charts for each token.
-
-![Crypto Dashboard Preview](https://user-images.githubusercontent.com/your-preview-image.png)
+**Төслийн товч танилцуулга:**  
+Энэхүү төсөл нь крипто валютын зах зээлийн мэдээллийг харуулах вэб аппликейшн юм. Binance API болон WebSocket ашиглан бодит цагийн үнэ, өсөлт, уналт, график болон бусад статистик мэдээллийг харуулдаг.
 
 ---
 
-## Features
+## Төслийн технологи
 
-Real-time market data using Binance WebSocket  
-Live updating price table with pagination & filters  
-Token list sections (Top Gainers, Losers, New, Highest)  
-Interactive charts with Recharts  
-Responsive design (desktop, tablet, mobile)  
-Coin detail modal with time filter (1D / 1W / 1M)  
-Deployed easily on [Vercel](https://vercel.com)
-
----
-
-## Tech Stack
-
-| Technology | Description |
-|-------------|--------------|
-| [Next.js 14+](https://nextjs.org/) | React framework for SSR & routing |
-| [Tailwind CSS](https://tailwindcss.com/) | Utility-first CSS framework |
-| [Recharts](https://recharts.org/en-US/) | Charting library for React |
-| [Binance API](https://binance-docs.github.io/apidocs/spot/en/#introduction) | Real-time cryptocurrency data |
-| [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) | Live updates without refreshing |
+- **Next.js 15** - React фрэймворк SSR/SSG дэмжлэгтэй
+- **React 19** - UI бүрдүүлэлт
+- **Tailwind CSS 4** - Хурдан, уян хатан CSS дизайн
+- **Recharts** - График харуулах
+- **Swiper** - Слайдер/карусель
+- **WebSocket (Binance)** - Бодит цагийн зах зээлийн мэдээлэл
+- **TypeScript** - Төслийн кодыг аюулгүй, тодорхой байдлаар бичих
 
 ---
 
-## Project Setup
+## Setup / Тохиргоо
 
-### Clone the Repository
+1. **Репозиторийг clone хийх**
 ```bash
-git clone https://github.com/Amaraa0212/crypto-market-dashboard.git
-cd crypto-market-dashboard
+git clone https://github.com/Amaraa0212/crypto-dashboard-next.git
+cd crypto-dashboard-next
+```
+2. **NPM суулгах**
+```
+npm install
+# эсвэл
+yarn
+```
+3. **сервер ажиллуулах**
+```
+npm run dev
+# эсвэл
+yarn dev
+```
+
+## Компонентууд
+
+1. **Table**
+Крипто валютын жагсаалт
+Баганууд: Symbol, Price, 24h Change, Volume, Chart
+Column sort, pagination дэмжигдсэн
+
+2. **TokenList**
+Өсөлт, уналт, шинэ болон хамгийн өндөр хэмжээтэй токен жагсаалт
+Chart
+Бодит цагийн график
+Өдөр, 7 хоног, 1 сар хугацааны шүүлтүүртэй
+
+3. **Modal**
+Тухайн токены дэлгэрэнгүй мэдээлэл
+Recharts Line Chart ашигласан
+Market Cap, About, Price History зэрэг мэдээлэл
+
+## Сайжруулалт
+
+- **State management**: React Query эсвэл Zustand ашиглан API request-ийг cache хийх
+
+- **Pagination болон search**: Илүү оновчтой болгох
+
+- **Dark mode**: Tailwind dark mode
+
+- **Responsive**: Бүх төхөөрөмжид зөв харагдахуйц болгох
+
+- **Error handling**: API алдаа болон WebSocket тасалдлыг илүү сайн барих
+
+## Deploy
+
+Vercel дээр байрлуулсан линк: https://crypto-dashboard-next.vercel.app
