@@ -1,103 +1,107 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import Table from "./components/Table";
+import TokenList from "./components/TokenList";
+import { Swiper, SwiperSlide , useSwiper } from 'swiper/react';
+import 'swiper/css';
+
+export interface Ticker {
+  s: string;
+  c: string;
+  P: string;
+  q: string;
+}
+
+export default function Page() {
+  const swiper = useSwiper();
+  const [tickers, setTickers] = useState<Ticker[]>([]);
+  const [tickersAPI, setTickersAPI] = useState<Ticker[]>([]);
+
+  useEffect(() => {
+    fetch("https://api.binance.com/api/v3/ticker/24hr")
+      .then(res => res.json())
+      .then((data) => {
+        const mapped: Ticker[] = data
+          .filter((t: any) => t.symbol.endsWith("USDT"))
+          .map((t: any) => ({
+            s: t.symbol,
+            c: t.lastPrice,
+            P: t.priceChangePercent,
+            q: t.volume,
+          }));
+        setTickersAPI(mapped);
+      });
+  }, []);
+  
+
+  useEffect(() => {
+    const ws = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
+
+    ws.onmessage = (event) => {
+      const data: any[] = JSON.parse(event.data); // any ашиглах
+      const filtered = data
+        .filter((coin) => coin.s.endsWith("USDT"))
+        .map((coin) => ({
+          s: coin.s,
+          c: coin.c,
+          P: coin.P,
+          q: coin.q,
+        }));
+      setTickers(filtered);
+    };
+
+    return () => ws.close();
+  }, []);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <main className="p-8 max-w-7xl m-auto">
+      <p className="font-bold text-2xl">Crypto Market Dashboard</p>
+      <div className="relative">
+        <Swiper
+          className="gap-10 mt-10 mb-10"
+          spaceBetween={50}
+          slidesPerView={3.5}
+          breakpoints={{
+            1200: { // Desktop
+              slidesPerView: 3.5,
+              spaceBetween: 40,
+            },
+            1024: { // Tablet large
+              slidesPerView: 2.7,
+              spaceBetween: 35,
+            },
+            768: { // Tablet small
+              slidesPerView: 2.3,
+              spaceBetween: 30,
+            },
+            500: { // Mobile large
+              slidesPerView: 1.5,
+              spaceBetween: 25,
+            },
+            0: { // Mobile small
+              slidesPerView: 1.1,
+              spaceBetween: 20,
+            },
+          }}
+          onSlideChange={() => console.log("slide change")}
+          onSwiper={(swiper) => console.log(swiper)}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <SwiperSlide>
+            <TokenList tickers={tickers} type="gainers" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <TokenList tickers={tickers} type="losers" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <TokenList tickers={tickers} type="new" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <TokenList tickers={tickers} type="highest" />
+          </SwiperSlide>
+        </Swiper>
+      </div>
+      <Table initialTickers={tickersAPI} />
+    </main>
   );
 }
