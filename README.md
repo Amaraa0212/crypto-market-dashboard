@@ -35,5 +35,5 @@ Deployed easily on [Vercel](https://vercel.com)
 
 ### Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/crypto-market-dashboard.git
+git clone https://github.com/Amaraa0212/crypto-market-dashboard.git
 cd crypto-market-dashboard
